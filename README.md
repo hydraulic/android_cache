@@ -1,4 +1,5 @@
 # android_cache
 
-1. a
-2. dd
+一个Android端的对象缓存；
+
+客户端和服务端缓存的区别
