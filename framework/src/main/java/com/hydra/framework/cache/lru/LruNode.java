@@ -1,7 +1,6 @@
 package com.hydra.framework.cache.lru;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,10 +15,8 @@ public class LruNode<K, V> {
     @NonNull
     public final V value;
 
-    @Nullable
     public LruNode<K, V> pre;
 
-    @Nullable
     public LruNode<K, V> next;
 
     public final int size;

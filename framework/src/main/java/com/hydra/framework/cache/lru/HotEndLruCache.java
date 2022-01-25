@@ -1,17 +1,16 @@
 package com.hydra.framework.cache.lru;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by Hydra.
  * 设计参考文档：https://www.cnblogs.com/cyjb/archive/2012/11/16/LruCache.html
  * 以及：https://blog.51cto.com/yeshaochen/913342
  */
-@SuppressWarnings("unused")
 public class HotEndLruCache<K, V> {
 
     // hot node 和 cold node 分界线，>= 2 时是hot
@@ -25,10 +24,7 @@ public class HotEndLruCache<K, V> {
 
     private final HashMap<K, LruNode<K, V>> mLocationMap = new HashMap<>(100);
 
-    @Nullable
     private LruNode<K, V> mHotHead = null;
-
-    @Nullable
     private LruNode<K, V> mColdHead = null;
 
     private final ReentrantReadWriteLock mLock = new ReentrantReadWriteLock();
@@ -167,7 +163,7 @@ public class HotEndLruCache<K, V> {
             while (true) {
                 LruNode<K, V> coldTail = mHotHead.pre;
 
-                if (coldTail != null && coldTail.visitCount.get() >= HOT_COLD_BOUNDARY) {
+                if (coldTail.visitCount.get() >= HOT_COLD_BOUNDARY) {
                     coldTail.updateVisitCount(1);
 
                     setNewHotHead(coldTail);
@@ -200,9 +196,7 @@ public class HotEndLruCache<K, V> {
         newNode.next = existNode;
         newNode.pre = existNode.pre;
 
-        if (existNode.pre != null) {
-            existNode.pre.next = newNode;
-        }
+        existNode.pre.next = newNode;
         existNode.pre = newNode;
     }
 
@@ -237,13 +231,8 @@ public class HotEndLruCache<K, V> {
             setNewHotHead(null);
             setNewColdHead(null);
         } else {
-            if (node.next != null) {
-                node.next.pre = node.pre;
-            }
-
-            if (node.pre != null) {
-                node.pre.next = node.next;
-            }
+            node.next.pre = node.pre;
+            node.pre.next = node.next;
 
             if (mHotHead == node) {
                 setNewHotHead(node.next);

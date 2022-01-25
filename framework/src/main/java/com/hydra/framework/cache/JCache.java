@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.hydra.framework.cache.JCacheContainer.JCacheBuilder;
 import com.hydra.framework.cache.lru.HotEndLruCache;
+import com.hydra.framework.thread.ThreadBus;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -156,7 +157,8 @@ public class JCache<T> {
                 if (current - lastRefreshTime >= mExpireTime) {
                     cacheObject.lastRefreshTime = current;
 
-                    YYTaskExecutor.execute(() -> mCacheController.onNeedRefresh(cacheKey, cacheObject));
+                    ThreadBus.post(ThreadBus.Mid_Pool,
+                            () -> mCacheController.onNeedRefresh(cacheKey, cacheObject));
                 }
             }
 
